@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; }
+  body { background: #f0f0f0; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+
+// ─── injected by Python ──────────────────────────────────────────────────────
+const MESH_DATA   = __MESH_DATA__;    // {positions: [...], colors: [...]}
+const CAMERA_TYPE = "__CAMERA_TYPE__"; // "orthographic" | "perspective"
+const CAM         = __CAM__;          // {eye, center, up}
+const WIDTH       = __WIDTH__;
+const HEIGHT      = __HEIGHT__;
+const SHADOW_DATA = __SHADOW_DATA__;  // null | {pixels: [...], size: int}
+const SHADOW_Z    = __SHADOW_Z__;
+// ─────────────────────────────────────────────────────────────────────────────
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(WIDTH, HEIGHT);
+renderer.setPixelRatio(1);
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xf0f0f0);
+
+// Camera
+let camera;
+if (CAMERA_TYPE === 'orthographic') {
+  const s = 0.625;  // half-range matching ±0.625 world units
+  const aspect = WIDTH / HEIGHT;
+  camera = new THREE.OrthographicCamera(-s * aspect, s * aspect, s, -s, 0.01, 100);
+} else {
+  camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 0.01, 100);
+}
+const eye    = new THREE.Vector3(CAM.eye.x,    CAM.eye.y,    CAM.eye.z);
+const center = new THREE.Vector3(CAM.center.x, CAM.center.y, CAM.center.z);
+const up     = new THREE.Vector3(CAM.up.x,     CAM.up.y,     CAM.up.z);
+camera.position.copy(eye);
+camera.up.copy(up);
+camera.lookAt(center);
+camera.updateProjectionMatrix();
+
+// Mesh
+const geo = new THREE.BufferGeometry();
+geo.setAttribute('position', new THREE.Float32BufferAttribute(MESH_DATA.positions, 3));
+geo.setAttribute('color',    new THREE.Float32BufferAttribute(MESH_DATA.colors,    3));
+const mat  = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.FrontSide });
+scene.add(new THREE.Mesh(geo, mat));
+
+let pmat;
+if (SHADOW_DATA) {
+  const size = SHADOW_DATA.size;
+  const data = new Uint8Array(SHADOW_DATA.pixels);
+  const tex  = new THREE.DataTexture(data, size, size, THREE.RGBAFormat);
+  tex.needsUpdate = true;
+
+  pmat  = new THREE.MeshBasicMaterial({
+    map: tex, transparent: true, depthWrite: false,
+  });
+}
+else {
+  pmat =  new THREE.MeshBasicMaterial();
+}
+
+const plane = new THREE.PlaneGeometry(1.2, 1.2);
+const mesh = new THREE.Mesh(plane, pmat);
+mesh.position.z = SHADOW_Z;
+scene.add(mesh);
+
+
+renderer.render(scene, camera);
+
+// Signal Python that render is done
+window.__RENDER_DONE__ = true;
+</script>
+</body>
+</html>

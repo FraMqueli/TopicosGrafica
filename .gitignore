@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+
+# Output
+tarea_1/test/
+tarea_1/results/
+
+# Data
+tarea_1/dataset.zip
+
+# Claude
+.claude/
+
+# macOS
+.DS_Store

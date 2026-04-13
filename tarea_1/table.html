@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mesh Analysis</title>
+<style>
+  body { font-family: monospace; font-size: 12px; margin: 2rem; background: #fff; color: #222; }
+  h1 { font-size: 1rem; font-weight: normal; margin-bottom: 1rem; }
+  table { border-collapse: collapse;  }
+  th { text-align: left; border-bottom: 2px solid #222; padding: 4px 8px; white-space: nowrap; }
+  th.rot { vertical-align: bottom; padding: 0 4px 4px; }
+  th.rot span { display: inline-block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; }
+  td { padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: middle; }
+  tr:hover td { background: #f5f5f5; }
+  .images { display: flex; gap: 4px; }
+  .images img { width: 80px; height: 80px; object-fit: cover; }
+  .num { text-align: right; }
+  .bool-true  { color: #080; }
+  .bool-false { color: #c00; }
+</style>
+</head>
+<body>
+<h1>Mesh Analysis — <span id="count"></span> models</h1>
+<table id="table">
+  <thead><tr id="header"></tr></thead>
+  <tbody id="body"></tbody>
+</table>
+
+<script>
+const VIEWS = ["persp", "back", "side_left", "top"];
+const BOOL_COLS = ["is_oriented"];
+const FLOAT_COLS = ["surface_area"];
+const SKIP_COLS = ["path", "error"];
+
+const params = new URLSearchParams(window.location.search);
+const output = params.get('out', 'results');
+
+fetch(`${output}/metrics.csv`)
+  .then(r => r.text())
+  .then(csv => {
+    const lines = csv.trim().split("\n");
+    const cols  = lines[0].split(",");
+
+    // header
+    const header = document.getElementById("header");
+    header.innerHTML = "<th>model</th><th>views</th>" +
+      cols.filter(c => !SKIP_COLS.includes(c) && c !== "file")
+          .map(c => `<th class="rot"><span>${c}</span></th>`).join("");
+
+    const rows = lines.slice(1).map(line => {
+      const vals = line.split(",");
+      return Object.fromEntries(cols.map((c, i) => [c, vals[i]]));
+    });
+
+    document.getElementById("count").textContent = rows.length;
+
+    const tbody = document.getElementById("body");
+    rows.forEach(row => {
+      const stem = row.file;
+      const dir  = `${output}/renders/${stem}`;
+      const imgs = VIEWS.map(v =>
+        `<img src="${dir}/${stem}_${v}.png" title="${v}" onerror="this.style.display='none'">`
+      ).join("");
+
+      const statCols = cols.filter(c => !SKIP_COLS.includes(c) && c !== "file");
+      const cells = statCols.map(c => {
+        const v = row[c];
+        if (BOOL_COLS.includes(c)) {
+          const t = v === "True" || v === "1";
+          return `<td class="bool-${t}">${t ? "yes" : "no"}</td>`;
+        }
+        if (FLOAT_COLS.includes(c)) return `<td class="num">${parseFloat(v).toFixed(2)}</td>`;
+        return `<td class="num">${v}</td>`;
+      }).join("");
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${stem}</td><td><div class="images">${imgs}</div></td>${cells}`;
+      tbody.appendChild(tr);
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+
+# Output
+test/
+results/
+
+# Data
+dataset.zip
+
+# macOS
+.DS_Store
