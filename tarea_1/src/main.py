@@ -1,3 +1,6 @@
+from dummy import *
+from flat_shading import flat_shadding
+import utils
 import argparse
 import logging
 from pathlib import Path
@@ -6,10 +9,6 @@ import numpy as np
 import pandas as pd
 
 log = logging.getLogger(__name__)
-
-import utils
-
-from dummy import *
 
 
 LIGHTS = [
@@ -37,7 +36,8 @@ LIGHTS = [
 
 def process_files(npz_files: list[Path], out_dir: Path):
     log.info(
-        "Processando %i archivos. Output será guardado en %s", len(npz_files), out_dir
+        "Processando %i archivos. Output será guardado en %s", len(
+            npz_files), out_dir
     )
 
     rows = []
@@ -87,7 +87,8 @@ def process_files(npz_files: list[Path], out_dir: Path):
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+    logging.basicConfig(level=logging.INFO,
+                        format="%(levelname)s: %(message)s")
     parser = argparse.ArgumentParser(description="Evaluar tarea 1")
     parser.add_argument(
         "--models",

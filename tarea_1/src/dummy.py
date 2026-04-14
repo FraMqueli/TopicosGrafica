@@ -179,10 +179,10 @@ def compute_stats(mesh: Mesh) -> dict:
     return stats
 
 
-def flat_shadding(mesh: Mesh, lights: list[dict], ambient: float = 0.3) -> np.ndarray:
-    face_colors = np.zeros((len(mesh.faces), 3), dtype=np.int32)
-    face_colors[:, 0] = 1.0
-    return face_colors
+# def flat_shadding(mesh: Mesh, lights: list[dict], ambient: float = 0.3) -> np.ndarray:
+#     face_colors = np.zeros((len(mesh.faces), 3), dtype=np.int32)
+#     face_colors[:, 0] = 1.0
+#     return face_colors
 
 
 def render_shadow(mesh: Mesh, lights: list[dict] | None) -> np.array:
