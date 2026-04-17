@@ -1,6 +1,6 @@
 from dummy import *
 from flat_shading import flat_shadding
-from render_shadow import render_shadow
+from render_shadow import render_shadow_ray as render_shadow
 import utils
 import argparse
 import logging
