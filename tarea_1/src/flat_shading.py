@@ -62,7 +62,7 @@ def point_source(light, point, normal):
     r = np.linalg.norm(l_vec)
     l = l_vec / r
 
-    I = quantity_I(light["intensity"])
+    I = light["intensity"]
     E = irradiance_E(I, r, l, normal)
 
     return E * light["color"]
@@ -77,9 +77,6 @@ def directional_source(light, normal):
     return E * light["color"]
 
 
-def quantity_I(p: float):
-    return p / (4 * np.pi)
-
 
 def irradiance_E(I: float, r: float, incidence_v, normal_face):
     incidence_v = np.asarray(incidence_v)
@@ -90,7 +87,7 @@ def irradiance_E(I: float, r: float, incidence_v, normal_face):
     normal_face = normal_face / np.linalg.norm(normal_face)
 
     # coseno de incidencia
-    cos_theta = np.dot(incidence_v, normal_face)
+    cos_theta = np.dot(-incidence_v, normal_face)
 
     return I / (r**2) * max(0.0, cos_theta)
 
@@ -103,7 +100,7 @@ def far_irradiance_E(H, incidence_v, normal_face):
     normal_face = normal_face / np.linalg.norm(normal_face)
 
     # coseno de incidencia
-    cos_theta = np.dot(incidence_v, normal_face)
+    cos_theta = np.dot(-incidence_v, normal_face)
 
     return H * max(0.0, cos_theta)
 
