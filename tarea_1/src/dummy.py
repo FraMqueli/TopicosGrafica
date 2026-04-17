@@ -185,7 +185,7 @@ def compute_stats(mesh: Mesh) -> dict:
 #     return face_colors
 
 
-def render_shadow(mesh: Mesh, lights: list[dict] | None) -> np.array:
-    shadow = np.ones((256, 256), dtype=np.uint8)
-    shadow[10:-10, 10:-10] = 0.0
-    return shadow
+#def render_shadow(mesh: Mesh, lights: list[dict] | None) -> np.array:
+#    shadow = np.ones((256, 256), dtype=np.uint8)
+#    shadow[10:-10, 10:-10] = 0.2
+#    return shadow
