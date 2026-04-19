@@ -120,6 +120,25 @@ Una cara es degenerada si tiene vértices repetidos (`len(set(face)) < 3`) o si 
 
 ---
 
+### 3.4 Render Shadow
+Se realizaron dos implementaciones distintas para el rendering de la sombra de los modelos.
+
+La primera implementación, encontrada en la función `render_shador_ray`, utiliza ray tracing desde cada pixel de la sombra para determinar si alguna luz logra iluminarlo. Esto se verifica revisando si el rayo desde el centro del pixel a la luz interseca alguno de los triángulos en la escena, utilizando el algoritmo de Möller-Trumbore. Esta implementación fue relativamente simple y efectiva, pero el tiempo necesario para renderizar cada modelo con este método es muy alto.
+
+En consideración del rendimiento de algoritmo de ray tracing, se implementó un segundo algoritmo basado en rasterización, el cual se encuentra en `render_shadow_projection`. Este proyecta el modelo al plano z=0 (donde se ubica la sombra) desde la perspectiva de cada luz, marcando como iluminados aquellos pixeles cuyo centro no este contenido por la proyección del modelo para alguna luz. Profundizamos en este algoritmo como fue el finalmente utilizado.
+
+La implementación concreta itera sobre cada luz, y para cada luz itera sobre cada cara del mesh. Para cada vértice de cada cara, lo proyecta desde la perspectiva de la luz al plano z=0. Al proyectar los 3 vértices, podemos generar un "bounding square" en el plano del triángulo e iterar sobre los pixeles en la intersección del bounding square y el cuadrado de la textura de sombra. Por cada pixel, verificamos si este está dentro del triangulo o no, marcándolo como cubierto para la luz de ser así. Al final, marcamos un pixel como iluminado si no está cubierto para alguna luz, y como sombreado si está cubierto para todas las luces. Esto es equivalente a hacer un "OR" por cada pixel entre los shadow maps de cada luz.
+
+La proyección fue distinta dependiendo del tipo de luz. Fue relativamente simple para las luces direccionales, proyectando los vértices según la dirección de la luz. Por otro lado, las point lights requieren una proyección basada en el vector de desplazamiento desde la fuente de luz a cada vértice. Esto introduce un problema cuando un vértice tiene una coordenada z mayor o igual a la de la luz, puesto que estos vértices no se pueden proyectar al plano z=0. En este caso, es necesario introducir clipping.
+
+#### Clipping
+
+Si solamente 1 o 2 vértices de una cara logran proyectarse al plano de la sombra, es necesario recortar el triángulo para crear una subfigura que sí logra proyectarse entera, y usar esta para calcular la sombra. Para la implementación de esto, aprovechamos que únicamente la altura de los vértices relativa a la altura de la luz afecta si logra proyectarse al plano.
+
+En el caso de que solo un vértice logre proyectarse al plano, buscamos puntos en las aristas conectadas al vértice proyectado tal que ambos puntos tengan la misma altura que la luz. Esto puede definirse con una constante alfa entre 0 y 1, con el punto resultante siendo alfa-veces el vértice proyectado y (1-alfa)-veces el vértice sobre la luz. Una vez encontrado este valor, le restamos una pequeña constante epsilon, de tal manera que obtenemos dos puntos que justo alcanzan a proyectarse a z=0. Utilizamos estos puntos nuevos, junto al vértice proyectado inicialmente, como vértices para proyectar un triángulo "recortado" al plano, y calculamos la sombra a partir de este.
+
+Si solo dos vértices logran proyectarse, generamos similarmente un punto nuevo en cada arista del vértice que no logró proyectarse, resultando en dos puntos nuevos justo debajo de la luz. Usando los dos vértices originales y los dos puntos nuevos, ahora obtenemos un cuadrilátero. Lo dividimos en dos triángulos que comparten dos vértices opuestos del cuadrilátero y difieron en uno, de tal manera que unidos representen el cuadrilátero en su totalidad, y proyectamos estos triángulos para obtener la sombra correspondiente a la cara original.
+
 ## 4. Verificación y Debugging
 
 ### Cubo unitario
@@ -165,3 +184,5 @@ Se utilizó Claude Code (claude-sonnet-4-6) como asistente. Se generó el códig
 - **Uso principal:** implementación de `normalize_mesh` y `compute_stats`, y borrador del informe
 - **Validación:** se verificó cada función contra el cubo (valores teóricos conocidos) y contra la fórmula de Euler. Se revisó que la lógica de cada cálculo coincida con las clases del curso (clase 02 para normales/área, clase 03 para bounding box).
 - **Modificaciones:** se ajustó el tipo de dato de los vértices a `float64` durante los cálculos para evitar pérdida de precisión, y se convirtió de vuelta a `float32` al retornar.
+
+Hans Kühn: No hice uso de IA.

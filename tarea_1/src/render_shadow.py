@@ -87,7 +87,7 @@ def divide_triangle(err, v0, v1, origin):
 
   return [
     (p0, p1, p2),
-    (p0, p1, p3)
+    (p1, p2, p3)
   ]
 
 def trim_triangle(err1, err2, v0, origin):
@@ -120,16 +120,16 @@ def cover_pixels_in_light_shadow_map(lit_pixels, v0, v1, v2):
   # Obtenemos los índices de pixel correspondientes a los vértices del triángulo
   p0, p1, p2 = ((v0, v1, v2) + np.array([0.6, 0.6, 0])) / pixel_size - np.array([0.5, 0.5, 0])
   x_min = int(min(p0[0], p1[0], p2[0]))
-  x_max = int(max(p0[0], p1[0], p2[0]))
+  x_max = int(max(p0[0], p1[0], p2[0])) + 1
   y_min = int(min(p0[1], p1[1], p2[1]))
-  y_max = int(max(p0[1], p1[1], p2[1]))
+  y_max = int(max(p0[1], p1[1], p2[1])) + 1
 
   for i in range(max(y_min, 0), min(y_max+1, 256)):
     for j in range(max(x_min, 0), min(x_max+1, 256)):
-      if(lit_pixels[i, j] == 0):
+      if(lit_pixels[255 - i, j] == 0):
         continue
-      if(point_in_triangle(np.array([i, j, 0]), p0, p1, p2)):
-        lit_pixels[i][j] = 0
+      if(point_in_triangle(np.array([j, i, 0]), p0, p1, p2)):
+        lit_pixels[255 - i][j] = 0
 
 def point_in_triangle(p, a, b, c):
   # Basado en https://gamedev.stackexchange.com/a/23745
@@ -168,7 +168,6 @@ def render_shadow_ray(mesh: Mesh, lights: list[dict] | None) -> np.array:
 
   shadow = np.zeros((256, 256), dtype=np.uint8)
   for i in range(256):
-    print(i)
     for j in range(256):
       x_coord = pixel_size*(j + 0.5) - 0.6
       y_coord = pixel_size*(i + 0.5) - 0.6
