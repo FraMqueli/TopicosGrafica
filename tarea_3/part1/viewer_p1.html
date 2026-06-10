@@ -1,0 +1,271 @@
+<!--
+  Para correr este viewer localmente, lanza un servidor HTTP desde la raiz de tarea_3
+
+      python -m http.server 8000
+
+  Luego abre en el navegador:
+      http://localhost:8000/viewer_base.html
+
+  Para cargar un PLY distinto, pásalo como parámetro en la URL:
+      http://localhost:8000/viewer_base.html?splat=/InteriorGS/3dgs.ply
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3DGS Viewer — Tarea 3</title>
+<style>
+  body {
+    margin: 0;
+  }
+
+  #ui {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #eeeeee;
+    padding: 10px 14px;
+    font-family: monospace;
+    font-size: 13px;
+    border-radius: 6px;
+    user-select: none;
+  }
+
+  #ui select {
+    background: rgba(255, 255, 255, 0.1);
+    color: #eee;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-family: monospace;
+    font-size: 12px;
+    cursor: pointer;
+    margin-left: 6px;
+  }
+  #ui select option {
+    /* background: #222; */
+    color: #3d3d3d;
+  }
+</style>
+</head>
+<body>
+
+<div id="ui">
+  <span>Camera controls:</span>
+  <select id="ctrlselect">
+    <option value="orbit">Orbit (Three.js)</option>
+    <option value="spark">Spark</option>
+  </select>
+</div>
+
+<script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/",
+      "@sparkjsdev/spark": "https://sparkjs.dev/releases/spark/2.1.0/spark.module.js"
+    }
+  }
+</script>
+<script type="module">
+  import * as THREE from "three";
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+  import { SparkRenderer, SplatMesh, SparkControls, SplatLoader, RgbaArray } from "@sparkjsdev/spark";
+
+
+  const DEFAULT_URL = "https://sparkjs.dev/assets/splats/butterfly.spz";
+  const params = new URLSearchParams(window.location.search);
+  const splatURL = params.get('splat') ?? DEFAULT_URL;
+  const labelsURL = params.get('labels') ?? null;
+  const methodURL = params.get('method') ?? null;
+
+  const LABEL_STYLE = {
+    1: { color: new THREE.Color(0.55, 0.55, 0.55), opacityScale: 0.15 },
+    2: { color: new THREE.Color(1.00, 0.85, 0.00), opacityScale: 0.35 },
+    4: { color: new THREE.Color(0.10, 0.40, 1.00), opacityScale: 1.00 },
+  };
+
+
+  let scene, camera, mesh;
+
+  let labelsData = null;
+
+  init();
+
+  /**
+   * Carga el archivo splatURL y lo agrega a la escena
+   * **/
+  function loadSplat(labelsJson) {
+    const loader = new SplatLoader();
+    loader.loadAsync(splatURL, (event) => {
+      //
+      // se puede eliminar, es solo para verificar que se está cargando.
+      //
+      if (event.type === "progress") {
+        const progress = event.lengthComputable
+          ? `${((event.loaded / event.total) * 100).toFixed(2)}%`
+          : `${event.loaded} bytes`;
+        console.log(`\rBackground download progress: ${progress}`);
+      }
+    })
+      .then((packedSplats) => {
+        if (labelsJson) {
+          applyLabels(packedSplats, labelsJson);
+        }
+        mesh = new SplatMesh({ packedSplats });
+        //
+        // pueden modificar el tamaño, posición y rotación del mesh
+        //
+        //mesh.rotation.y = 3.5 * Math.PI / 2;
+        mesh.rotation.x = 0.44 * Math.PI / 2;
+        mesh.rotation.z = 2 * Math.PI / 2;
+        mesh.position.y += 2.6
+        //mesh.position.x += 1
+
+        scene.add(mesh);
+
+        // Verificar que se cargó correctamente.
+        console.log("num Splats", mesh.packedSplats.numSplats);
+
+      })
+      .catch((error) => {
+        console.warn(error);
+      });
+  }
+
+  async function loadLabels() {
+    if (!labelsURL && !methodURL) return null;
+    try {
+      let path = "";
+      if(methodURL && !labelsURL){
+        path = "labels_" + methodURL + ".json"; 
+      }
+      else{
+        path = labelsURL;
+      }
+      const res = await fetch(path);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      console.log(
+        `Labels loaded — method: ${json.method}, splats labeled: ${json.labels?.length ?? 0}`
+      );
+      return json;
+    } catch (err) {
+      console.warn("Could not load labels JSON:", err);
+      return null;
+    }
+  }
+
+  function applyLabels(ps, labelsJson) {
+    const labels = labelsJson?.labels;
+    if (!labels || !labels.length) return;
+ 
+    const numSplats = ps.numSplats;
+    const available = Math.min(labels.length, numSplats);
+ 
+    if (labels.length !== numSplats) {
+      console.warn(
+        `Label count (${labels.length}) != splat count (${numSplats}). ` +
+        `Applying to first ${available} splats.`
+      );
+    }
+ 
+    // Reusable objects — avoids GC pressure in the loop
+    const center     = new THREE.Vector3();
+    const scales     = new THREE.Vector3();
+    const quaternion = new THREE.Quaternion();
+    const color      = new THREE.Color();
+ 
+    for (let i = 0; i < available; i++) {
+      const label = labels[i];
+      const style = LABEL_STYLE[label];
+      if (!style) continue; // unknown label → leave untouched
+ 
+      // Read current splat data
+      const s = ps.getSplat(i);
+      center.copy(s.center);
+      scales.copy(s.scales);
+      quaternion.copy(s.quaternion);
+ 
+      // Override colour and scale opacity
+      color.copy(style.color);
+      const opacity = s.opacity * style.opacityScale;
+ 
+      ps.setSplat(i, center, scales, quaternion, opacity, color);
+    }
+ 
+    console.log(`applyLabels: processed ${available} splats.`);
+  }
+
+
+
+  async function init() {
+
+    scene = new THREE.Scene();
+    
+    scene.background = new THREE.Color('#aaa');
+
+    const aspect = window.innerWidth / window.innerHeight;
+    camera = new THREE.PerspectiveCamera(60, aspect, 1, 100);
+    camera.position.set(3, 3, 3);
+    scene.add(camera);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const canvas = renderer.domElement;
+    document.body.appendChild(canvas)
+
+    const spark = new SparkRenderer({ renderer });
+    scene.add(spark);
+
+    const labelsJson = await loadLabels();
+    loadSplat(labelsJson);
+
+    // https://sparkjs.dev/docs/controls/
+    let orbitControls = new OrbitControls(camera, canvas);
+    let sparkControls = new SparkControls({ canvas });
+    let activeControlType = document.getElementById('ctrlselect').value;
+    orbitControls.enabled = activeControlType === 'orbit';
+    sparkControls.enabled = !orbitControls.enabled;
+
+    document.getElementById('ctrlselect').addEventListener('change', (e) => {
+      const controlType = e.target.value;
+      if (activeControlType == controlType){
+        return;
+      }
+      else {
+        activeControlType = controlType;
+        orbitControls.enabled = activeControlType === 'orbit';
+        sparkControls.enabled = !orbitControls.enabled;
+        if (activeControlType === 'orbit') {
+          const camdir = new THREE.Vector3();
+          camera.getWorldDirection(camdir);
+          orbitControls.target.copy(camera.position).addScaledVector(camdir, 5);
+          orbitControls.update();
+        }
+      }
+      
+    });
+
+    renderer.setAnimationLoop(function animate() {
+      if (activeControlType === 'orbit') {
+        orbitControls.update();
+      } else {
+        sparkControls.update(camera);
+      }
+      renderer.render(scene, camera);
+    });
+
+    const gridHelper = new THREE.GridHelper(20, 20, '#bbb', '#999');
+    scene.add(gridHelper);
+
+    const axesHelper = new THREE.AxesHelper(2);
+    scene.add(axesHelper);
+  }
+</script>
+
+</body>
+</html>
