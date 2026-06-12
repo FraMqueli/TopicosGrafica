@@ -14,3 +14,19 @@ tarea_1/dataset/
 
 # macOS
 .DS_Store
+
+# Datos pesados (no van en git)
+*.ply
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+
+# Mac
+.DS_Store
+
+# Editor
+.vscode/
+*.swp
