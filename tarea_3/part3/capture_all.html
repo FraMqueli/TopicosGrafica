@@ -1,0 +1,262 @@
+<!--
+  Uso:
+      http://localhost:8000/capture_all.html
+
+  Recorre todas las variantes en variants/ × 3 vistas y descarga una PNG por combinación.
+  No tocar el navegador mientras corre.
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3DGS Batch Capture</title>
+  <style>
+    body { margin: 0; overflow: hidden; font-family: monospace; }
+    #info {
+      position: absolute;
+      top: 10px; left: 10px;
+      background: rgba(0,0,0,0.75);
+      color: #eee;
+      padding: 12px 16px;
+      font-size: 13px;
+      border-radius: 6px;
+      z-index: 100;
+      max-width: 480px;
+      line-height: 1.7;
+    }
+    #log {
+      position: absolute;
+      bottom: 10px; left: 10px; right: 10px;
+      background: rgba(0,0,0,0.6);
+      color: #aaa;
+      padding: 8px 12px;
+      font-size: 11px;
+      border-radius: 6px;
+      max-height: 160px;
+      overflow-y: auto;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+
+<div id="info">Iniciando...</div>
+<div id="log"></div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/",
+    "@sparkjsdev/spark": "https://sparkjs.dev/releases/spark/2.1.0/spark.module.js"
+  }
+}
+</script>
+
+<script type="module">
+  import * as THREE from "three";
+  import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+  import { SparkRenderer, SplatMesh, SplatLoader } from "@sparkjsdev/spark";
+
+  // ── CONFIG ────────────────────────────────────────────────────────────────
+
+  const VIEWS = {
+    v1: { rx: 5.92, ry: 2.33, rz: 2.38, px: -1.0, py: 0.6,  pz: -1.7 },
+    v2: { rx: 0.0,  ry: 1.17, rz: 2.96, px:  1.4, py: 1.4,  pz: -2.4 },
+    v3: { rx: 2.42, ry: 0.67, rz: 5.21, px: -1.4, py: 1.4,  pz:  0.0 },
+  };
+
+  const WARMUP_FRAMES = 120;
+
+  // Todas las combinaciones de grados SH (excepto la original 1111)
+  function buildQueue() {
+    const queue = [];
+    for (let e0 = 0; e0 <= 1; e0++)
+    for (let e1 = 0; e1 <= 1; e1++)
+    for (let e2 = 0; e2 <= 1; e2++)
+    for (let e3 = 0; e3 <= 1; e3++) {
+      if (e0 === 1 && e1 === 1 && e2 === 1 && e3 === 1) continue;
+      const ply = `variants/E0_${e0}_E1_${e1}_E2_${e2}_E3_${e3}.ply`;
+      for (const view of Object.keys(VIEWS)) {
+        queue.push({ ply, view });
+      }
+    }
+    return queue;
+  }
+
+  const QUEUE = buildQueue();
+  let queueIndex = 0;
+
+  // ── UI ────────────────────────────────────────────────────────────────────
+
+  const infoEl = document.getElementById("info");
+  const logEl  = document.getElementById("log");
+
+  function setInfo(html) { infoEl.innerHTML = html; }
+  function addLog(msg) {
+    const line = document.createElement("div");
+    line.textContent = msg;
+    logEl.appendChild(line);
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  // ── ESCENA (se crea una vez, el mesh se reemplaza en cada iteración) ───────
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color("#aaa");
+
+  const camera = new THREE.PerspectiveCamera(
+    70, window.innerWidth / window.innerHeight, 1, 100
+  );
+  camera.position.set(-5, -2, -3);
+  scene.add(camera);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  const spark = new SparkRenderer({ renderer });
+  scene.add(spark);
+
+  const orbitControls = new OrbitControls(camera, renderer.domElement);
+
+  scene.add(new THREE.GridHelper(20, 20, "#bbb", "#999"));
+  scene.add(new THREE.AxesHelper(2));
+
+  // ── ESTADO POR ITEM ───────────────────────────────────────────────────────
+
+  let currentMesh = null;
+  let warmup      = 0;
+  let ready       = false;
+  let captured    = false;
+
+  // ── RENDER LOOP ───────────────────────────────────────────────────────────
+
+  renderer.setAnimationLoop(() => {
+    orbitControls.update();
+    renderer.render(scene, camera);
+
+    if (!ready || captured) return;
+
+    warmup++;
+
+    const item = QUEUE[queueIndex];
+    setInfo(
+      `Progreso: ${queueIndex + 1} / ${QUEUE.length}<br>` +
+      `PLY: ${item.ply}<br>` +
+      `Vista: ${item.view}<br>` +
+      `Frame: ${warmup} / ${WARMUP_FRAMES}`
+    );
+
+    if (warmup >= WARMUP_FRAMES) {
+      captured = true;
+      captureAndNext();
+    }
+  });
+
+  // ── CAPTURA Y AVANCE ──────────────────────────────────────────────────────
+
+  function captureAndNext() {
+    renderer.render(scene, camera);
+
+    const item     = QUEUE[queueIndex];
+    const plyName  = item.ply.split("/").pop().replace(".ply", "");
+    const filename = `${plyName}_${item.view}.png`;
+
+    const png = renderer.domElement.toDataURL("image/png");
+    const a   = document.createElement("a");
+    a.href     = png;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    addLog(`✓ ${filename}`);
+    console.log("guardado:", filename);
+
+    // Eliminar mesh actual de la escena
+    if (currentMesh) {
+      scene.remove(currentMesh);
+      currentMesh = null;
+    }
+
+    queueIndex++;
+
+    if (queueIndex >= QUEUE.length) {
+      setInfo(`✅ Completado — ${QUEUE.length} capturas guardadas.`);
+      renderer.setAnimationLoop(null);
+      return;
+    }
+
+    // Pequeña pausa antes del siguiente para que el browser libere memoria
+    setTimeout(() => loadItem(QUEUE[queueIndex]), 300);
+  }
+
+  // ── CARGA DE UN ITEM ──────────────────────────────────────────────────────
+
+  function loadItem({ ply, view }) {
+    ready    = false;
+    captured = false;
+    warmup   = 0;
+
+    const v = VIEWS[view];
+
+    setInfo(`Cargando ${queueIndex + 1}/${QUEUE.length}:<br>${ply} | ${view}`);
+
+    const loader = new SplatLoader();
+    loader.loadAsync(ply, (e) => {
+      if (e.type === "progress" && e.lengthComputable) {
+        const pct = ((e.loaded / e.total) * 100).toFixed(1);
+        setInfo(
+          `Descargando ${queueIndex + 1}/${QUEUE.length}:<br>` +
+          `${ply}<br>${pct}%`
+        );
+      }
+    })
+    .then((packedSplats) => {
+      const mesh = new SplatMesh({ packedSplats });
+
+      mesh.rotation.x = v.rx;
+      mesh.rotation.y = v.ry;
+      mesh.rotation.z = v.rz;
+      mesh.position.x = v.px;
+      mesh.position.y = v.py;
+      mesh.position.z = v.pz;
+
+      scene.add(mesh);
+      currentMesh = mesh;
+
+      console.log(`[${queueIndex + 1}/${QUEUE.length}] splats: ${mesh.packedSplats.numSplats}`);
+      ready = true;
+    })
+    .catch((err) => {
+      addLog(`✗ ERROR: ${ply} — ${err.message}`);
+      console.error(err);
+      // Saltar al siguiente aunque falle
+      queueIndex++;
+      if (queueIndex < QUEUE.length) {
+        setTimeout(() => loadItem(QUEUE[queueIndex]), 300);
+      } else {
+        setInfo("✅ Completado con errores.");
+        renderer.setAnimationLoop(null);
+      }
+    });
+  }
+
+  // ── ARRANQUE ──────────────────────────────────────────────────────────────
+
+  setInfo(`Cola: ${QUEUE.length} capturas (${QUEUE.length / 3} variantes × 3 vistas)`);
+  setTimeout(() => loadItem(QUEUE[0]), 500);
+
+  // ── RESIZE ────────────────────────────────────────────────────────────────
+
+  window.addEventListener("resize", () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+</script>
+</body>
+</html>

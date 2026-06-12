@@ -1,0 +1,164 @@
+<!--
+  Uso:
+      http://localhost:8000/capture.html?splat=variants/E0_1_E1_0_E2_0_E3_0.ply&view=v1
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3DGS Auto Capture</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    #info {
+      position: absolute;
+      top: 10px; left: 10px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 14px;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+
+<div id="info">Cargando...</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/",
+    "@sparkjsdev/spark": "https://sparkjs.dev/releases/spark/2.1.0/spark.module.js"
+  }
+}
+</script>
+
+<script type="module">
+  import * as THREE from "three";
+  import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+  import { SparkRenderer, SplatMesh, SplatLoader } from "@sparkjsdev/spark";
+
+  // ── CONFIG ────────────────────────────────────────────────────────────────
+  // Mismos valores que encontraste en viewer_base
+  const VIEWS = {
+    v1: { rx: 5.92, ry: 2.33, rz: 2.38, px: -1.0, py: 0.6,  pz: -1.7 },
+    v2: { rx: 0.0,  ry: 1.17, rz: 2.96, px:  1.4, py: 1.4,  pz: -2.4 },
+    v3: { rx: 2.42, ry: 0.67, rz: 5.21, px: -1.4, py: 1.4,  pz:  0.0 },
+  };
+
+  // Frames a esperar después de que el mesh esté listo antes de capturar.
+  // 120 es suficiente en la mayoría de casos; subir si la captura sale incompleta.
+  const WARMUP_FRAMES = 120;
+
+  // ── URL PARAMS ────────────────────────────────────────────────────────────
+  const params   = new URLSearchParams(window.location.search);
+  const splatURL = params.get("splat") ?? "./Poison-3DGS/kitchen_3dgs.ply";
+  const viewName = params.get("view")  ?? "v1";
+  const view     = VIEWS[viewName] ?? VIEWS.v1;
+
+  // ── ESCENA — idéntica al viewer_base ─────────────────────────────────────
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color("#aaa");
+
+  const aspect = window.innerWidth / window.innerHeight;
+  const camera = new THREE.PerspectiveCamera(70, aspect, 1, 100);
+  camera.position.set(-5, -2, -3);   // mismo que viewer_base
+  scene.add(camera);
+
+  // preserveDrawingBuffer:true es lo único que difiere del viewer_base
+  const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  const canvas = renderer.domElement;
+  document.body.appendChild(canvas);
+
+  const spark = new SparkRenderer({ renderer });
+  scene.add(spark);
+
+  // OrbitControls igual que viewer_base (aunque no se usa para navegar)
+  const orbitControls = new OrbitControls(camera, canvas);
+
+  scene.add(new THREE.GridHelper(20, 20, "#bbb", "#999"));
+  scene.add(new THREE.AxesHelper(2));
+
+  // ── ESTADO ────────────────────────────────────────────────────────────────
+  let warmup   = 0;
+  let ready    = false;
+  let captured = false;
+
+  // ── RENDER LOOP ───────────────────────────────────────────────────────────
+  renderer.setAnimationLoop(() => {
+    orbitControls.update();
+    renderer.render(scene, camera);
+
+    if (!ready || captured) return;
+
+    warmup++;
+    document.getElementById("info").textContent =
+      `${splatURL} | ${viewName} | frame ${warmup}/${WARMUP_FRAMES}`;
+
+    if (warmup >= WARMUP_FRAMES) {
+      captured = true;
+      capture();
+    }
+  });
+
+  // ── CARGA DEL SPLAT ───────────────────────────────────────────────────────
+  const loader = new SplatLoader();
+
+  loader.loadAsync(splatURL, (e) => {
+    if (e.type === "progress") {
+      const pct = e.lengthComputable
+        ? `${((e.loaded / e.total) * 100).toFixed(1)}%`
+        : `${e.loaded} bytes`;
+      document.getElementById("info").textContent = `Descargando: ${pct}`;
+    }
+  })
+  .then((packedSplats) => {
+    const mesh = new SplatMesh({ packedSplats });
+    scene.add(mesh);
+
+    // Aplicar transform exactamente igual que viewer_base con setupSliders()
+    mesh.rotation.x = view.rx;
+    mesh.rotation.y = view.ry;
+    mesh.rotation.z = view.rz;
+    mesh.position.x = view.px;
+    mesh.position.y = view.py;
+    mesh.position.z = view.pz;
+
+    console.log("num splats:", mesh.packedSplats.numSplats);
+    ready = true;
+  })
+  .catch(console.error);
+
+  // ── CAPTURA ───────────────────────────────────────────────────────────────
+  function capture() {
+    renderer.render(scene, camera);
+
+    const png      = renderer.domElement.toDataURL("image/png");
+    const plyName  = splatURL.split("/").pop().replace(".ply", "");
+    const filename = `${plyName}_${viewName}.png`;
+
+    const a = document.createElement("a");
+    a.href     = png;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    document.getElementById("info").textContent = `✓ Guardado: ${filename}`;
+    console.log("captura guardada:", filename);
+  }
+
+  // ── RESIZE ────────────────────────────────────────────────────────────────
+  window.addEventListener("resize", () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+</script>
+
+</body>
+</html>

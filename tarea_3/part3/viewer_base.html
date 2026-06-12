@@ -1,0 +1,291 @@
+<!--
+  Para correr este viewer localmente, lanza un servidor HTTP desde la raiz de tarea_3
+
+      python -m http.server 8000
+
+  Luego abre en el navegador:
+      http://localhost:8000/viewer_base.html
+
+  Para cargar un PLY distinto, pásalo como parámetro en la URL:
+      http://localhost:8000/viewer_base.html?splat=/InteriorGS/3dgs.ply
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3DGS Viewer — Tarea 3</title>
+<style>
+  body {
+    margin: 0;
+  }
+
+  #ui {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #eeeeee;
+    padding: 10px 14px;
+    font-family: monospace;
+    font-size: 13px;
+    border-radius: 6px;
+    user-select: none;
+  }
+
+  #ui select {
+    background: rgba(255, 255, 255, 0.1);
+    color: #eee;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-family: monospace;
+    font-size: 12px;
+    cursor: pointer;
+    margin-left: 6px;
+  }
+  #ui select option {
+    /* background: #222; */
+    color: #3d3d3d;
+  }
+</style>
+</head>
+<body>
+
+<div id="ui">
+  <div>
+    <span>Camera controls:</span>
+    <select id="ctrlselect">
+      <option value="orbit">Orbit (Three.js)</option>
+      <option value="spark">Spark</option>
+    </select>
+  </div>
+
+  <hr>
+
+  <div>
+    <label>Rot X</label>
+    <span id="rotXVal">0.00</span><br>
+    <input id="rotX" type="range"
+           min="0" max="6.283"
+           step="0.01" value="0">
+  </div>
+
+  <div>
+    <label>Rot Y</label>
+    <span id="rotYVal">0.00</span><br>
+    <input id="rotY" type="range"
+           min="0" max="6.283"
+           step="0.01" value="0">
+  </div>
+
+  <div>
+    <label>Rot Z</label>
+    <span id="rotZVal">0.00</span><br>
+    <input id="rotZ" type="range"
+           min="0" max="6.283"
+           step="0.01" value="0">
+  </div>
+
+  <hr>
+
+  <div>
+    <label>Pos X</label>
+    <span id="posXVal">0.0</span><br>
+    <input id="posX" type="range"
+           min="-10" max="10"
+           step="0.1" value="0">
+  </div>
+
+  <div>
+    <label>Pos Y</label>
+    <span id="posYVal">0.0</span><br>
+    <input id="posY" type="range"
+           min="-10" max="10"
+           step="0.1" value="0">
+  </div>
+
+  <div>
+    <label>Pos Z</label>
+    <span id="posZVal">0.0</span><br>
+    <input id="posZ" type="range"
+           min="-10" max="10"
+           step="0.1" value="0">
+  </div>
+</div>
+
+<script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/",
+      "@sparkjsdev/spark": "https://sparkjs.dev/releases/spark/2.1.0/spark.module.js"
+    }
+  }
+</script>
+<script type="module">
+  import * as THREE from "three";
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+  import { SparkRenderer, SplatMesh, SparkControls, SplatLoader, RgbaArray } from "@sparkjsdev/spark";
+
+
+  const DEFAULT_URL = "./Poison-3DGS/kitchen_3dgs.ply";
+  const splatURL = new URLSearchParams(window.location.search).get('splat') ?? DEFAULT_URL;
+
+  let scene, camera, mesh;
+
+function setupSliders() {
+
+  const rotX = document.getElementById("rotX");
+  const rotY = document.getElementById("rotY");
+  const rotZ = document.getElementById("rotZ");
+
+  const posX = document.getElementById("posX");
+  const posY = document.getElementById("posY");
+  const posZ = document.getElementById("posZ");
+
+  const rotXVal = document.getElementById("rotXVal");
+  const rotYVal = document.getElementById("rotYVal");
+  const rotZVal = document.getElementById("rotZVal");
+
+  const posXVal = document.getElementById("posXVal");
+  const posYVal = document.getElementById("posYVal");
+  const posZVal = document.getElementById("posZVal");
+
+  function updateTransform() {
+
+    if (!mesh) return;
+
+    mesh.rotation.x = parseFloat(rotX.value);
+    mesh.rotation.y = parseFloat(rotY.value);
+    mesh.rotation.z = parseFloat(rotZ.value);
+
+    mesh.position.x = parseFloat(posX.value);
+    mesh.position.y = parseFloat(posY.value);
+    mesh.position.z = parseFloat(posZ.value);
+
+    rotXVal.textContent = Number(rotX.value).toFixed(2);
+    rotYVal.textContent = Number(rotY.value).toFixed(2);
+    rotZVal.textContent = Number(rotZ.value).toFixed(2);
+
+    posXVal.textContent = Number(posX.value).toFixed(1);
+    posYVal.textContent = Number(posY.value).toFixed(1);
+    posZVal.textContent = Number(posZ.value).toFixed(1);
+  }
+
+  [rotX, rotY, rotZ, posX, posY, posZ]
+    .forEach(control => control.addEventListener("input", updateTransform));
+
+  updateTransform();
+}
+
+  init();
+
+  /**
+   * Carga el archivo splatURL y lo agrega a la escena
+   * **/
+function loadSplat() {
+  const loader = new SplatLoader();
+
+  loader.loadAsync(splatURL, (event) => {
+
+    if (event.type === "progress") {
+      const progress = event.lengthComputable
+        ? `${((event.loaded / event.total) * 100).toFixed(2)}%`
+        : `${event.loaded} bytes`;
+
+      console.log(`\rBackground download progress: ${progress}`);
+    }
+
+  })
+  .then((packedSplats) => {
+
+    mesh = new SplatMesh({ packedSplats });
+
+    scene.add(mesh);
+
+    document.getElementById("rotX").value = 5.92;
+    document.getElementById("rotY").value = 2.33;
+    document.getElementById("rotZ").value = 2.38;
+
+    document.getElementById("posX").value = -1;
+    document.getElementById("posY").value = 0.6;
+    document.getElementById("posZ").value = -1.7;
+
+    setupSliders();
+
+    console.log("num Splats", mesh.packedSplats.numSplats);
+
+})
+  .catch((error) => {
+    console.warn(error);
+  });
+}
+
+  function init() {
+
+    scene = new THREE.Scene();
+    
+    scene.background = new THREE.Color('#aaa');
+
+    const aspect = window.innerWidth / window.innerHeight;
+    camera = new THREE.PerspectiveCamera(70, aspect, 1, 100);
+    camera.position.set(-5, -2, -3);
+    scene.add(camera);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const canvas = renderer.domElement;
+    document.body.appendChild(canvas)
+
+    const spark = new SparkRenderer({ renderer });
+    scene.add(spark);
+
+    loadSplat();
+
+    // https://sparkjs.dev/docs/controls/
+    let orbitControls = new OrbitControls(camera, canvas);
+    let sparkControls = new SparkControls({ canvas });
+    let activeControlType = document.getElementById('ctrlselect').value;
+    orbitControls.enabled = activeControlType === 'orbit';
+    sparkControls.enabled = !orbitControls.enabled;
+
+    document.getElementById('ctrlselect').addEventListener('change', (e) => {
+      const controlType = e.target.value;
+      if (activeControlType == controlType){
+        return;
+      }
+      else {
+        activeControlType = controlType;
+        orbitControls.enabled = activeControlType === 'orbit';
+        sparkControls.enabled = !orbitControls.enabled;
+        if (activeControlType === 'orbit') {
+          const camdir = new THREE.Vector3();
+          camera.getWorldDirection(camdir);
+          orbitControls.target.copy(camera.position).addScaledVector(camdir, 5);
+          orbitControls.update();
+        }
+      }
+      
+    });
+
+    renderer.setAnimationLoop(function animate() {
+      if (activeControlType === 'orbit') {
+        orbitControls.update();
+      } else {
+        sparkControls.update(camera);
+      }
+      renderer.render(scene, camera);
+    });
+
+    const gridHelper = new THREE.GridHelper(20, 20, '#bbb', '#999');
+    scene.add(gridHelper);
+
+    const axesHelper = new THREE.AxesHelper(2);
+    scene.add(axesHelper);
+  }
+</script>
+
+</body>
+</html>
