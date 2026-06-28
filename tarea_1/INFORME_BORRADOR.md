@@ -2,7 +2,7 @@
 **IIC3912 - Tópicos Avanzados de Gráfica Computacional**
 **Integrante(s):** Sofia Rencoret
 
----
+--
 
 ## 1. Portada
 *(completar con todos los integrantes del grupo)*
