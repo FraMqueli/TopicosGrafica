@@ -1,0 +1,1302 @@
+[
+  {
+    "index": 1,
+    "bits": "11000101111000110001",
+    "score": 0.7533,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.84,
+      "symmetry": 0.3,
+      "connectivity": 0.9,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 2,
+    "bits": "00111001001111000110",
+    "score": 0.7424,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 3,
+    "bits": "00110110100001011011",
+    "score": 0.731,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 4,
+    "bits": "10011110001010100101",
+    "score": 0.7424,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 5,
+    "bits": "01101101010110101000",
+    "score": 0.7238,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 6,
+    "bits": "11110010011000011100",
+    "score": 0.7038,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.56,
+      "symmetry": 0.4,
+      "connectivity": 0.7,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 7,
+    "bits": "11100010000111000101",
+    "score": 0.7429,
+    "breakdown": {
+      "balance": 0.9,
+      "transitions": 0.8,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 8,
+    "bits": "10000101110101011110",
+    "score": 0.7386,
+    "breakdown": {
+      "balance": 0.9,
+      "transitions": 0.72,
+      "symmetry": 0.5,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 9,
+    "bits": "01011011000101101100",
+    "score": 0.7424,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 10,
+    "bits": "01001110100100111010",
+    "score": 0.7424,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 11,
+    "bits": "00011100010011010111",
+    "score": 0.7424,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.5,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 12,
+    "bits": "11010101101010000110",
+    "score": 0.7238,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 13,
+    "bits": "10101001111001000101",
+    "score": 0.7238,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 14,
+    "bits": "00110011110010010110",
+    "score": 0.7238,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 15,
+    "bits": "11001100001101100011",
+    "score": 0.7181,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.56,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 16,
+    "bits": "11011110100001010100",
+    "score": 0.7167,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.5,
+      "connectivity": 0.75,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 17,
+    "bits": "10110000011010110011",
+    "score": 0.7095,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.5,
+      "connectivity": 0.7,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 18,
+    "bits": "00011011101001110010",
+    "score": 0.7052,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.52,
+      "symmetry": 0.5,
+      "connectivity": 0.75,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 19,
+    "bits": "10010011011011001010",
+    "score": 0.6933,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.52,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 20,
+    "bits": "01101000101100010111",
+    "score": 0.6933,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.52,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 21,
+    "bits": "00001111101000011101",
+    "score": 0.6919,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.56,
+      "symmetry": 0.4,
+      "connectivity": 0.75,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 22,
+    "bits": "00100001101010101111",
+    "score": 0.691,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.52,
+      "symmetry": 0.5,
+      "connectivity": 0.65,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 23,
+    "bits": "00111001010011100001",
+    "score": 0.7443,
+    "breakdown": {
+      "balance": 0.9,
+      "transitions": 0.76,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 24,
+    "bits": "10010101000111100010",
+    "score": 0.7443,
+    "breakdown": {
+      "balance": 0.9,
+      "transitions": 0.76,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 25,
+    "bits": "00010100111000111010",
+    "score": 0.7429,
+    "breakdown": {
+      "balance": 0.9,
+      "transitions": 0.8,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 26,
+    "bits": "01001100011100011100",
+    "score": 0.7386,
+    "breakdown": {
+      "balance": 0.9,
+      "transitions": 0.72,
+      "symmetry": 0.5,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 27,
+    "bits": "10101110000111010010",
+    "score": 0.7352,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 28,
+    "bits": "10101001010000111110",
+    "score": 0.7167,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.4,
+      "connectivity": 0.75,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 29,
+    "bits": "01000101100111100101",
+    "score": 0.7167,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.5,
+      "connectivity": 0.75,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 30,
+    "bits": "10100111101100001010",
+    "score": 0.6981,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.52,
+      "symmetry": 0.5,
+      "connectivity": 0.7,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 31,
+    "bits": "01110010000110101011",
+    "score": 0.691,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.52,
+      "symmetry": 0.5,
+      "connectivity": 0.65,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 32,
+    "bits": "10000011000101111011",
+    "score": 0.68,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.56,
+      "symmetry": 0.3,
+      "connectivity": 0.8,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 33,
+    "bits": "11100001001110010100",
+    "score": 0.7443,
+    "breakdown": {
+      "balance": 0.9,
+      "transitions": 0.76,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 34,
+    "bits": "11100001110101101010",
+    "score": 0.7443,
+    "breakdown": {
+      "balance": 0.9,
+      "transitions": 0.76,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 35,
+    "bits": "01101010101001011001",
+    "score": 0.7424,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 36,
+    "bits": "11010001011010100101",
+    "score": 0.7424,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 37,
+    "bits": "10110010100101010110",
+    "score": 0.7424,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 38,
+    "bits": "10101001011110100010",
+    "score": 0.7424,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.5,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 39,
+    "bits": "01100011101100111000",
+    "score": 0.7424,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.5,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 40,
+    "bits": "10010100111001010101",
+    "score": 0.7424,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.5,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 41,
+    "bits": "10000110001110110011",
+    "score": 0.7424,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.5,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 42,
+    "bits": "11010110110011000001",
+    "score": 0.7424,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.5,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 43,
+    "bits": "00011101011011001100",
+    "score": 0.7424,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.5,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 44,
+    "bits": "10110011100011100011",
+    "score": 0.7386,
+    "breakdown": {
+      "balance": 0.9,
+      "transitions": 0.72,
+      "symmetry": 0.5,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 45,
+    "bits": "01101010010101011010",
+    "score": 0.7367,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.64,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 46,
+    "bits": "01001110010110110001",
+    "score": 0.7352,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 47,
+    "bits": "01010101111001001001",
+    "score": 0.7352,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.5,
+      "connectivity": 0.8,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 48,
+    "bits": "11100110100010110001",
+    "score": 0.7352,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 49,
+    "bits": "00101110001100111001",
+    "score": 0.7352,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.5,
+      "connectivity": 0.8,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 50,
+    "bits": "00101011000111101010",
+    "score": 0.7348,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.76,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 51,
+    "bits": "00111110001011001001",
+    "score": 0.731,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 52,
+    "bits": "01011001010110100110",
+    "score": 0.731,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 53,
+    "bits": "01110001101001001110",
+    "score": 0.7295,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.64,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 54,
+    "bits": "01101010011010010101",
+    "score": 0.729,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.72,
+      "symmetry": 0.3,
+      "connectivity": 0.85,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 55,
+    "bits": "01101110100101001100",
+    "score": 0.729,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.72,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 56,
+    "bits": "11000110111010010100",
+    "score": 0.729,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.72,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 57,
+    "bits": "10100010111000010111",
+    "score": 0.729,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.72,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 58,
+    "bits": "10010110101100011100",
+    "score": 0.729,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.72,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 59,
+    "bits": "00110010001110011110",
+    "score": 0.7281,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.5,
+      "connectivity": 0.75,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 60,
+    "bits": "00011100010101101001",
+    "score": 0.7252,
+    "breakdown": {
+      "balance": 0.9,
+      "transitions": 0.76,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 61,
+    "bits": "11001010000110110110",
+    "score": 0.7238,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 62,
+    "bits": "00101100000101011111",
+    "score": 0.7238,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 63,
+    "bits": "10100101011010011010",
+    "score": 0.7238,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 64,
+    "bits": "11010010101001110001",
+    "score": 0.7238,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 65,
+    "bits": "01011011011010101000",
+    "score": 0.7238,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 66,
+    "bits": "01101001110000110011",
+    "score": 0.7238,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 67,
+    "bits": "00111010101000101101",
+    "score": 0.7238,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.5,
+      "connectivity": 0.8,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 68,
+    "bits": "01010101110100101100",
+    "score": 0.7238,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.5,
+      "connectivity": 0.8,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 69,
+    "bits": "01100011110000011101",
+    "score": 0.7233,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 70,
+    "bits": "00010011101100101110",
+    "score": 0.7233,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 71,
+    "bits": "00111001011001011010",
+    "score": 0.7233,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 72,
+    "bits": "00010111100011001110",
+    "score": 0.7233,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.3,
+      "connectivity": 0.85,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 73,
+    "bits": "00010011111001011100",
+    "score": 0.7233,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.3,
+      "connectivity": 0.85,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 74,
+    "bits": "11000111001000011110",
+    "score": 0.7224,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.64,
+      "symmetry": 0.4,
+      "connectivity": 0.75,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 75,
+    "bits": "10000110110100111001",
+    "score": 0.7181,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.56,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 76,
+    "bits": "00110001110101001101",
+    "score": 0.7176,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.64,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 77,
+    "bits": "00111110101010010100",
+    "score": 0.7167,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.4,
+      "connectivity": 0.75,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 78,
+    "bits": "10110101111010100000",
+    "score": 0.7167,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.4,
+      "connectivity": 0.75,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 79,
+    "bits": "01011110001010010011",
+    "score": 0.7162,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.3,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 80,
+    "bits": "00111000100101101110",
+    "score": 0.7162,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.68,
+      "symmetry": 0.3,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 81,
+    "bits": "00011100001110101110",
+    "score": 0.7157,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.76,
+      "symmetry": 0.3,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 82,
+    "bits": "01011010101000011110",
+    "score": 0.7157,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.76,
+      "symmetry": 0.3,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 83,
+    "bits": "01101011001110100001",
+    "score": 0.7157,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.76,
+      "symmetry": 0.4,
+      "connectivity": 0.85,
+      "orientation": 0.4,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 84,
+    "bits": "10011010011011010100",
+    "score": 0.7124,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.52,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 85,
+    "bits": "10000111001011101001",
+    "score": 0.7124,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.52,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 86,
+    "bits": "10011110001001111000",
+    "score": 0.7124,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.52,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 87,
+    "bits": "10111000001100110110",
+    "score": 0.7124,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.52,
+      "symmetry": 0.5,
+      "connectivity": 0.8,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 88,
+    "bits": "11010110010101011000",
+    "score": 0.7124,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.52,
+      "symmetry": 0.5,
+      "connectivity": 0.8,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 89,
+    "bits": "11010100100100110110",
+    "score": 0.7124,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.52,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 90,
+    "bits": "10001110010100010111",
+    "score": 0.7119,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.3,
+      "connectivity": 0.85,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 91,
+    "bits": "01001111001110000110",
+    "score": 0.711,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.56,
+      "symmetry": 0.4,
+      "connectivity": 0.75,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 92,
+    "bits": "10110000111011000110",
+    "score": 0.7105,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.64,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 93,
+    "bits": "11100100101100011001",
+    "score": 0.7105,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.64,
+      "symmetry": 0.3,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 94,
+    "bits": "11101100011010110000",
+    "score": 0.7105,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.64,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 95,
+    "bits": "00010110111010000111",
+    "score": 0.7105,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.64,
+      "symmetry": 0.3,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 96,
+    "bits": "01111110000110011000",
+    "score": 0.7105,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.64,
+      "symmetry": 0.3,
+      "connectivity": 0.8,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 97,
+    "bits": "01111100110000011001",
+    "score": 0.7105,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.64,
+      "symmetry": 0.4,
+      "connectivity": 0.8,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 98,
+    "bits": "00101110110000011110",
+    "score": 0.71,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.72,
+      "symmetry": 0.3,
+      "connectivity": 0.85,
+      "orientation": 0.5,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 99,
+    "bits": "01101101111010000001",
+    "score": 0.7095,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.4,
+      "connectivity": 0.7,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  },
+  {
+    "index": 100,
+    "bits": "11001110000100101101",
+    "score": 0.7095,
+    "breakdown": {
+      "balance": 1.0,
+      "transitions": 0.6,
+      "symmetry": 0.4,
+      "connectivity": 0.7,
+      "orientation": 0.6,
+      "separability": 1.0
+    }
+  }
+]
