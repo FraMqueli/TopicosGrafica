@@ -145,6 +145,10 @@ data = {
   "scores": scores
 }
 
+if args.method == "extent-aware":
+  data["parameters"]["extent_iter"] = args.extent_iter
+  data["parameters"]["extent_threshold"] = args.extent_threshold
+
 with open(args.output, "w") as file:
   json.dump(data, file)
   
