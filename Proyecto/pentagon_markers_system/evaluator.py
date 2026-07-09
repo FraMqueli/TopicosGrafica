@@ -8,18 +8,6 @@ Structure-from-Motion (COLMAP), sin modificar el pipeline de reconstrucción.
 Este módulo NO conoce cómo se generan o buscan los marcadores (eso es
 responsabilidad de optimizer.py); solo sabe medir qué tan "bueno" es un
 marcador dado.
-
-Métricas implementadas
------------------------
-1. balance_score        -> distribución cercana a 50/50 de bits
-2. transitions_score     -> cambios entre triángulos adyacentes (riqueza de textura)
-3. symmetry_score        -> penaliza invariancia bajo rotaciones/reflexiones (D5)
-4. connectivity_score    -> penaliza regiones homogéneas grandes (blobs)
-5. orientation_score     -> mide si el patrón permite distinguir la orientación
-6. separability_score    -> distancia Hamming mínima frente a otros marcadores
-
-La función score() combina todas las métricas en un escalar único mediante
-una suma ponderada configurable.
 """
 
 from __future__ import annotations
@@ -146,7 +134,7 @@ def orientation_score(marker: Marker, automorphisms: Sequence[np.ndarray],
 
     Un score alto (cercano a 1) indica que ninguna rotación del marcador
     coincide con el marcador original, por lo tanto su orientación es
-    inequívoca al ser observado por COLMAP.
+    inequívoca al ser observado.
     """
     bits = marker.bits
     rotations = automorphisms[:n_rotations]

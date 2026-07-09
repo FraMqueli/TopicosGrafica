@@ -1,0 +1,225 @@
+Aquí se almacena el prompt entregado a claude para generar los archivos de esta carpeta (/pentagon_markers_system)
+Resultados logrados en zeroshot
+Propmt:
+
+# Sistema de generación y optimización de marcadores pentagonales
+## Objetivo general
+Este sistema tiene como objetivo generar, evaluar y optimizar marcadores binarios definidos sobre una estructura geométrica fija compuesta por un pentágono subdividido en 20 triángulos equiláteros.
+Estos marcadores serán utilizados como referencias visuales en experimentos de Structure-from-Motion (COLMAP), sin modificar el pipeline interno del sistema.
+El diseño se basa en los siguientes principios:
+- Alta densidad de información visual
+- Ausencia de simetrías
+- Alta distinguibilidad entre marcadores
+- Buena distribución espacial de información
+- Alto contraste binario
+- Estructura geométrica fija y reutilizable
+---
+# Arquitectura del sistema
+El sistema se divide en cinco módulos independientes:
+geometry.py → definición de la estructura geométrica marker.py → representación del marcador (bits) evaluator.py → funciones de evaluación de calidad optimizer.py → búsqueda de buenos marcadores render.py → conversión a imágenes
+
+Cada módulo tiene una responsabilidad única y no depende directamente de la implementación interna de los demás, solo de sus interfaces.
+---
+# geometry.py — Definición de la estructura geométrica
+## Propósito
+Definir la estructura fija del problema: un pentágono subdividido en 20 triángulos equiláteros.
+Este módulo no contiene información sobre marcadores, colores ni optimización. Solo define geometría y conectividad.
+---
+## Contenido
+### Triangle
+Representa una unidad básica del sistema.
+Atributos:
+- `id`: identificador único del triángulo
+- `vertices`: coordenadas (3, 2)
+- `center`: coordenada (2,)
+- `neighbors`: lista de triángulos adyacentes
+---
+### PentagonMesh
+Construye la estructura completa.
+Funciones principales:
+- `build()`
+  - genera los 20 triángulos del pentágono subdividido
+- `compute_adjacency()`
+  - calcula relaciones de vecindad entre triángulos
+- `get_triangles()`
+  - retorna lista de objetos `Triangle`
+- `get_graph()`
+  - retorna representación tipo grafo:
+    ```
+    {id: [neighbor_ids]}
+    ```
+---
+## Responsabilidad
+Define exclusivamente:
+- estructura geométrica
+- conectividad del sistema
+- topología del marcador
+---
+# marker.py — Representación del marcador
+## Propósito
+Definir cómo se representa un marcador sobre la estructura geométrica.
+Un marcador es un vector binario de tamaño 20, donde cada bit corresponde a un triángulo.
+---
+## Contenido
+### Marker
+Representación del estado del marcador.
+Atributos:
+- `bits`: array binario de tamaño 20
+- `score`: valor de calidad (calculado externamente)
+---
+### Funciones
+- `random()`
+  - genera un marcador aleatorio válido
+- `flip(i)`
+  - invierte el bit en la posición i
+- `copy()`
+  - retorna una copia del marcador
+- `hamming(other)`
+  - distancia entre dos marcadores
+- `validate()`
+  - aplica restricciones básicas (balance, etc.)
+---
+## Responsabilidad
+Define exclusivamente:
+- representación binaria
+- operaciones sobre el estado del marcador
+- manipulación local de bits
+---
+# evaluator.py — Evaluación de calidad
+## Propósito
+Evaluar la calidad de un marcador en función de su utilidad para Structure-from-Motion (COLMAP), sin modificar el pipeline de reconstrucción.
+---
+## Métricas principales
+### 1. Balance de bits
+Evita configuraciones triviales:
+- demasiados ceros
+- demasiados unos
+Objetivo: distribución cercana a 50/50
+---
+### 2. Transiciones
+Mide cambios entre triángulos adyacentes en el grafo.
+Sirve como proxy de:
+- riqueza de textura
+- densidad de features
+---
+### 3. Simetría
+Penaliza configuraciones invariantes bajo:
+- rotaciones del pentágono
+- reflexiones
+---
+### 4. Conectividad
+Evalúa la presencia de regiones homogéneas grandes.
+Se calcula mediante BFS/DFS sobre el grafo.
+---
+### 5. Orientación
+Mide si existe un patrón único que permita distinguir la orientación del marcador.
+---
+### 6. Separabilidad
+Garantiza que los marcadores sean distinguibles entre sí:
+- distancia Hamming mínima entre marcadores
+---
+## Función principal
+score(marker, geometry, existing_markers=None)
+
+Retorna un valor escalar de calidad.
+---
+## Responsabilidad
+Define:
+- qué es un buen marcador
+- cómo se mide su utilidad para COLMAP
+---
+# optimizer.py — Búsqueda de marcadores
+## Propósito
+Explorar el espacio de soluciones:
+
+2^20 = 1,048,576 combinaciones posibles
+
+
+de forma eficiente sin enumeración exhaustiva.
+---
+## Estrategia de optimización
+Se utiliza un enfoque basado en:
+- hill climbing
+- simulated annealing
+- diversidad de soluciones
+---
+## Componentes
+### Inicialización
+Se parte de un marcador aleatorio.
+---
+### Mutación
+Se modifican entre 1 y 3 bits aleatorios.
+---
+### Regla de aceptación
+- si mejora el score → aceptar
+- si empeora → aceptar con probabilidad:
+exp(-Δ / T)
+
+
+---
+### Temperatura
+Controla exploración vs explotación:
+- alta temperatura → exploración
+- baja temperatura → convergencia
+---
+### Diversidad
+Se mantiene un conjunto de marcadores ya seleccionados.
+Se rechazan soluciones demasiado similares:
+- distancia Hamming mínima
+---
+## Funciones principales
+- `optimize_single()`
+- `generate_population(n)`
+- `select_diverse(markers, k=12)`
+---
+## Responsabilidad
+Define:
+- cómo buscar soluciones de alta calidad
+- cómo evitar óptimos locales
+- cómo garantizar diversidad entre marcadores
+---
+# render.py — Visualización y exportación
+## Propósito
+Convertir la representación abstracta (bits + geometría) en imágenes utilizables en experimentos reales.
+---
+## Funciones principales
+### render_marker(marker, geometry)
+Dibuja el marcador:
+- cada triángulo se colorea según el bit
+- se mantiene el contorno del pentágono
+- salida en imagen (PNG)
+---
+### export_dataset(markers)
+Exporta múltiples marcadores:
+
+marker_01.png marker_02.png ... marker_12.png
+
+
+---
+### debug_view()
+Visualización opcional de:
+- triangulación
+- conectividad del grafo
+- bits activos
+---
+## Responsabilidad
+Define:
+- representación visual del sistema
+- exportación para experimentos en COLMAP
+---
+# Flujo del sistema
+
+geometry.py ↓ marker.py ↓ evaluator.py ↓ optimizer.py ↓ render.py ↓ experimentos COLMAP
+
+---
+# Resultado esperado
+El sistema permite:
+- generar marcadores pentagonales estructurados
+- optimizar su diseño automáticamente
+- asegurar distinguibilidad entre ellos
+- evaluar impacto en reconstrucción SfM
+- comparar contra otras clases de marcadores
+---
+# Nota final
+Este sistema no modifica COLMAP ni su pipeline interno.
+Su objetivo es estudiar cómo la **estructura de la información visual en la escena** afecta el desempeño de un sistema de Structure-from-Motion basado en características locales.
